@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: ZenPacks.community.NanThreshold
+Version: 1.0.0
+Summary: Tests for NaN on specified datapoints
+Home-page: http://shanewilliamscott.com
+Author: Shane Scott
+Author-email: shane@shanewilliamscott.com
+License: GPLv2
+Description: Tests for NaN on specified datapoints
+Platform: UNKNOWN
