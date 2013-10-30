@@ -9,6 +9,7 @@ class nanThreshDataSourceInfo(RRDDataSourceInfo):
 
     dataPoints = ProxyProperty('dataPoints')
     cycletime = ProxyProperty('cycletime')
+    severity = ProxyProperty('severity')
 
     @property
     def testable(self):

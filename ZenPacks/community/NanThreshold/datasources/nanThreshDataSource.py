@@ -9,15 +9,30 @@ class nanThreshDataSource(BasicDataSource, ZenPackPersistence):
     sourcetypes = ('Nan Monitor',)
     sourcetype = 'Nan Monitor'
 
-    eventClass = '/Status'
+    eventClass = '/Status/RRD'
+    component = 'RRD'
+    severity = 5
 
     dataPoints = 'sysUpTime,'
     cycletime = 60
 
     _properties = BasicDataSource._properties + (
-         {'id':'dataPoints', 'type':'string', 'mode':'w'},
-         {'id':'cycletime', 'type':'int', 'mode':'w'},
+        {'id':'dataPoints', 'type':'string', 'mode':'w'},
         )
+
+    factory_type_information = (
+    {
+        'immediate_view' : 'editNanThreshold',
+        'actions'        :
+        (
+            { 'id'            : 'edit',
+              'name'          : 'Data Source',
+              'action'        : 'editNanThreshold',
+              'permissions'   : ( Permissions.view, ),
+            },
+        )
+    },
+    )
 
     security = ClassSecurityInfo()
 
