@@ -1,4 +1,4 @@
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Permissions
 from Products.ZenModel.BasicDataSource import BasicDataSource
 from Products.ZenModel import RRDDataSource
 from Products.ZenModel.ZenPackPersistence import ZenPackPersistence
@@ -15,9 +15,11 @@ class nanThreshDataSource(BasicDataSource, ZenPackPersistence):
 
     dataPoints = 'sysUpTime,'
     cycletime = 60
+    count = 2
 
     _properties = BasicDataSource._properties + (
         {'id':'dataPoints', 'type':'string', 'mode':'w'},
+        {'id':'count', 'type':'int', 'mode':'w'},
         )
 
     factory_type_information = (
