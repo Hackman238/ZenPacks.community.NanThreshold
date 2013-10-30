@@ -101,15 +101,6 @@
           <td class="tablevalues" tal:condition="not:editable" 
                 tal:content="here/cycletime"/>
         </tr>
-        <tr>
-            <td class="tableheader">Count</td>
-            <td class="tablevalues" tal:condition="editable">
-            <input class="tablevalues" type="text" name="count:int" size="10"
-                tal:attributes="value here/count" />
-            </td>
-          <td class="tablevalues" tal:condition="not:editable" 
-                tal:content="here/count"/>
-        </tr>
 
     <tr>
         <td class=tableheader align="left" >
