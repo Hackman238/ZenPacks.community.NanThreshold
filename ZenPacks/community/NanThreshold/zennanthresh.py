@@ -147,7 +147,6 @@ class nanThreshCollectionTask(ObservableMixin):
                 if value is not None:
                     break
 
-            value = None
             if value is None:
                 value = -1
                 message = "NAN for dataPoint %s on device %s!" % (rrdName, self._devId)
