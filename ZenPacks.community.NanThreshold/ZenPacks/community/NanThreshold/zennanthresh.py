@@ -19,13 +19,12 @@ from Products.ZenCollector.tasks import SimpleTaskFactory,\
 
 from Products.ZenUtils.observable import ObservableMixin
 from Products.ZenUtils.Utils import unused, zenPath
+from Products.ZenEvents import Event
 
 from Products.ZenCollector.services.config import DeviceProxy
 unused(DeviceProxy)
 
 from ZenPacks.community.NanThreshold.services.nanThreshConfig import getVarNames
-
-from ZenPacks.community.NanThreshold.zapi import ZenossAPI
 
 COLLECTOR_NAME = "zennanthersh"
 
@@ -111,6 +110,7 @@ class nanThreshCollectionTask(ObservableMixin):
             component = datapoint['comp']
             severity = datapoint['sev']
             count = datapoint['count']
+            eventClass = datapoint['eclass']
             obj_attrs = datapoint['obj_attrs']
 
             rrd_paths = datapoint['rrd_paths']
@@ -119,13 +119,13 @@ class nanThreshCollectionTask(ObservableMixin):
             rrdNames = [varName for varName in varNames
                 if varName not in obj_attrs.keys()]
 
-            self._fetchRrdValues(rrdNames, rrd_paths, component, severity)
+            self._fetchRrdValues(rrdNames, rrd_paths, component, eventClass, severity)
 
             log.debug("Datapoint dump: %s", str(datapoint))
 
         return defer.succeed("Gathered datapoint information")
 
-    def _fetchRrdValues(self, rrdNames, rrd_paths, component, severity):
+    def _fetchRrdValues(self, rrdNames, rrd_paths, component, eventClass, severity):
         rrdStart = 'now-600s'
         rrdEnd = 'now'
         perfDir = zenPath('perf')
@@ -149,10 +149,13 @@ class nanThreshCollectionTask(ObservableMixin):
 
             if value is None:
                 value = -1
-                message = "NAN for dataPoint %s on device %s!" % (rrdName, self._devId)
+                message = "NAN for dataPoint %s on component %s on device %s!" % (rrdName, component, self._devId)
                 log.warn("%s", message)
-                evt = dict(device = self._devId, summary = message, component = component, severity = severity)
-                self._eventService.sendEvent(evt)
+                evt = dict(device = self._devId, eventClass=eventClass, summary = message, component = component, severity = severity)
+            elif value is not None:
+                message = "NAN clear for dataPoint %s on component %s on device %s!" % (rrdName, component, self._devId)
+                evt = dict(device = self._devId, eventClass=eventClass, summary = message, component = component, severity = Event.Clear)
+            self._eventService.sendEvent(evt)
             log.debug("Datapoint %s value: %s", rrdName, value)
 
 

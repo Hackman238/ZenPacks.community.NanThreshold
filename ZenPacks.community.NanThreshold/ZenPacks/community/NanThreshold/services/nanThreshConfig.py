@@ -4,7 +4,11 @@ import logging
 log = logging.getLogger('zen.zenhub.service.nanThresh')
 
 import Globals
+from DateTime import DateTime
 from Products.ZenCollector.services.config import CollectorConfigService
+
+from Products.PageTemplates.Expressions import getEngine
+from Products.ZenUtils.ZenTales import talesCompile
 
 from ZenPacks.community.NanThreshold.datasources.nanThreshDataSource import nanThreshDataSource
 
@@ -27,6 +31,25 @@ def getVarNames(dataPoints):
     names = varNameRe.findall(dataPoints)
     return [name for name in names if name not in keywords]
 
+def getComponent(context, componentId, componentField=None):
+    """Return localized component.
+    """
+    if componentField is None:
+        return componentId
+    if not componentField.startswith('string:') and \
+            not componentField.startswith('python:'):
+        componentField = 'string:%s' % componentField
+    compiled = talesCompile(componentField)
+    d = context
+    environ = {'dev' : d,
+               'device': d,
+               'here' : context,
+               'nothing' : None,
+               'now' : DateTime() }
+    res = compiled(getEngine().getContext(environ))
+    if isinstance(res, Exception):
+        raise res
+    return res
 
 class nanThreshConfig(CollectorConfigService):
 
@@ -85,7 +108,8 @@ class nanThreshConfig(CollectorConfigService):
                     obj_attrs=obj_attrs,
                     cycletime=dp.cycletime,
                     sev=ds.severity,
-                    comp=ds.component,
+                    eclass=ds.eventClass,
+                    comp=getComponent(context=deviceOrComponent, componentId=componentId, componentField=ds.component),
                     count=ds.count,
                     rrd_paths=rrd_paths,
                     path='/'.join((deviceOrComponent.rrdPath(), dp.name())),

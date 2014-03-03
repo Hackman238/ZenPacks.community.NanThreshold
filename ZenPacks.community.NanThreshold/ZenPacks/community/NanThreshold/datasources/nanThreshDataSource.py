@@ -9,12 +9,12 @@ class nanThreshDataSource(BasicDataSource, ZenPackPersistence):
     sourcetypes = ('Nan Monitor',)
     sourcetype = 'Nan Monitor'
 
+    component = '${here/id}'
     eventClass = '/Status/RRD'
-    component = 'RRD'
     severity = 5
 
-    dataPoints = 'sysUpTime,'
-    cycletime = 60
+    dataPoints = ''
+    cycletime = 30
     count = 2
 
     _properties = BasicDataSource._properties + (
