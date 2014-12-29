@@ -1,0 +1,10 @@
+Metadata-Version: 2.0
+Name: ZenPacks.community.NanThreshold
+Version: 1.2.3
+Summary: Tests for NaN on specified datapoints
+Home-page: http://steelhouselabs.com
+Author: Shane Scott
+Author-email: sscott@steelhouselabs.com
+License: GPLv2
+Description: Tests for NaN on specified datapoints
+Platform: UNKNOWN
